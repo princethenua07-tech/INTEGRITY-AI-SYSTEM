@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sentinel AI - Intelligent Online Exam Proctoring System</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+  <script type="module" crossorigin src="/assets/index-DFvi8uTi.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-AryQPtzn.css">
+</head>
+<body>
+  <!-- Global App Header -->
+  <header class="app-header">
+    <div class="brand-wrapper">
+      <div class="brand-logo">🛡️</div>
+      <div class="brand-info">
+        <h1>SENTINEL AI <span class="tag">PROCTOR V3.2</span></h1>
+        <p class="brand-sub">Autonomous Computer Vision & Acoustic Integrity Engine</p>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <button class="tab-btn active" data-tab="tab-exam" id="nav-btn-exam">
+        <span>🎓</span> Exam Portal
+      </button>
+      <button class="tab-btn" data-tab="tab-sandbox" id="nav-btn-sandbox">
+        <span>🔬</span> AI Sensor Sandbox (Demo)
+      </button>
+      <button class="tab-btn" data-tab="tab-report" id="nav-btn-report">
+        <span>📊</span> Proctor Audit & Evidence
+      </button>
+      <button class="tab-btn" data-tab="tab-slides" id="nav-btn-slides">
+        <span>📑</span> PPT & Viva Guide
+      </button>
+    </nav>
+
+    <!-- Header Actions -->
+    <div class="header-actions">
+      <div class="system-status-pill" id="system-status-indicator">
+        <span class="pulse-dot"></span>
+        <span id="status-text">AI SENSORS ACTIVE</span>
+      </div>
+
+      <button class="icon-btn" id="btn-toggle-sound" title="Toggle Warning Chime" aria-label="Toggle Warning Chime">
+        <span id="sound-icon">🔊</span>
+      </button>
+
+      <button class="icon-btn" id="btn-toggle-fullscreen" title="Toggle Fullscreen Mode" aria-label="Toggle Fullscreen Mode">
+        <span>⛶</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Viewports Container -->
+  <main class="app-main">
+
+    <!-- ========================================== -->
+    <!-- TAB 1: EXAM PORTAL                         -->
+    <!-- ========================================== -->
+    <section id="tab-exam" class="tab-content active">
+      
+      <!-- Screen 1A: Setup & Calibration Form -->
+      <div id="exam-setup-view" class="glass-card">
+        <div style="border-bottom: 1px solid var(--border-subtle); padding-bottom: 16px; margin-bottom: 20px;">
+          <h2 style="font-family: var(--font-heading); font-size: 24px; color: #fff;">Candidate Verification & Hardware Calibration</h2>
+          <p style="color: var(--text-muted); font-size: 14px;">Complete pre-exam authentication and position your face inside the target frame.</p>
+        </div>
+
+        <div class="setup-grid">
+          <!-- Left: Video & Sensor Meters -->
+          <div>
+            <div class="setup-video-container">
+              <video id="setup-video" autoplay playsinline muted></video>
+              <canvas id="setup-canvas"></canvas>
+              <div class="setup-target-oval" id="setup-target-oval"></div>
+              <div style="position: absolute; bottom: 12px; left: 14px; background: rgba(0,0,0,0.7); padding: 4px 10px; border-radius: var(--radius-sm); font-size: 11px; font-family: var(--font-mono); color: var(--accent-cyan);">
+                ALIGN FACE IN OVAL FRAME
+              </div>
+            </div>
+
+            <div class="sensor-meters">
+              <div class="meter-card">
+                <div class="meter-header">
+                  <span>MICROPHONE INPUT</span>
+                  <span id="setup-mic-level">0%</span>
+                </div>
+                <div class="meter-bar-bg">
+                  <div class="meter-bar-fill" id="setup-mic-bar"></div>
+                </div>
+              </div>
+
+              <div class="meter-card">
+                <div class="meter-header">
+                  <span>FACIAL ALIGNMENT</span>
+                  <span id="setup-face-status" style="color: var(--accent-cyan);">DETECTING...</span>
+                </div>
+                <div class="meter-bar-bg">
+                  <div class="meter-bar-fill" id="setup-face-bar" style="width: 50%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Candidate Details & Rules -->
+          <div>
+            <div class="form-group">
+              <label for="input-candidate-name">Candidate Full Name</label>
+              <input type="text" id="input-candidate-name" class="form-control" value="Rahul Sharma" placeholder="Enter student name">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <div class="form-group">
+                <label for="input-roll-no">Roll / Registration No.</label>
+                <input type="text" id="input-roll-no" class="form-control" value="CS-2026-042" placeholder="e.g. 21BCE1042">
+              </div>
+              <div class="form-group">
+                <label for="input-subject">Subject</label>
+                <input type="text" id="input-subject" class="form-control" value="Artificial Intelligence" readonly>
+              </div>
+            </div>
+
+            <ul class="rules-list">
+              <li><span>🚫</span> <strong>No Looking Away:</strong> Sustained gaze deviation will be flagged.</li>
+              <li><span>📱</span> <strong>Prohibited Objects:</strong> Smartphones or secondary screens trigger immediate penalty.</li>
+              <li><span>👥</span> <strong>Multiple Faces:</strong> Only the registered candidate must be visible.</li>
+              <li><span>🖥️</span> <strong>Anti-Tab Switch:</strong> Tab changes or exiting fullscreen logs a severe violation.</li>
+              <li><span>🎙️</span> <strong>Acoustic Monitoring:</strong> Talking or background whispers are logged.</li>
+            </ul>
+
+            <button id="btn-start-exam" class="btn-primary">
+              <span>🚀</span> Start Monitored Examination
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Screen 1B: Active Examination View -->
+      <div id="exam-active-view" style="display: none;">
+        <div class="exam-layout">
+          <!-- Main Exam Column -->
+          <div class="exam-main">
+            <!-- Question Card -->
+            <div class="glass-card">
+              <div class="question-header">
+                <div>
+                  <span class="badge-tag" id="q-category">Artificial Intelligence</span>
+                  <span style="font-size: 13px; color: var(--text-faint); margin-left: 8px;">Single Choice • +2.0 Marks</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <button id="btn-mark-review" class="btn-secondary" style="font-size: 12px; padding: 6px 12px;">
+                    ⭐ Mark for Review
+                  </button>
+                  <span class="q-number" id="q-counter">Question 1 of 10</span>
+                </div>
+              </div>
+
+              <div class="question-text" id="q-text">
+                Loading examination question...
+              </div>
+
+              <!-- Options List -->
+              <div class="options-container" id="q-options-container">
+                <!-- Dynamically Rendered -->
+              </div>
+
+              <!-- Question Navigation Footer -->
+              <div class="exam-nav-bar">
+                <button id="btn-prev-q" class="btn-secondary">
+                  ← Previous
+                </button>
+
+                <div style="display: flex; gap: 12px;">
+                  <button id="btn-next-q" class="btn-secondary">
+                    Next Question →
+                  </button>
+                  <button id="btn-submit-exam" class="btn-primary" style="background: linear-gradient(135deg, var(--accent-emerald), #059669); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
+                    ✓ Submit Exam
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Question Palette Card -->
+            <div class="glass-card" style="padding: 16px 20px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--text-muted);">
+                <span><strong>Question Navigation Palette</strong></span>
+                <div style="display: flex; gap: 16px; font-size: 12px;">
+                  <span style="display: flex; align-items: center; gap: 5px;"><span style="width: 10px; height: 10px; background: rgba(16,185,129,0.5); border: 1px solid var(--accent-emerald); border-radius: 2px;"></span> Answered</span>
+                  <span style="display: flex; align-items: center; gap: 5px;"><span style="width: 10px; height: 10px; background: rgba(245,158,11,0.5); border: 1px solid var(--accent-amber); border-radius: 2px;"></span> Review</span>
+                  <span style="display: flex; align-items: center; gap: 5px;"><span style="width: 10px; height: 10px; background: rgba(255,255,255,0.1); border: 1px solid var(--border-subtle); border-radius: 2px;"></span> Unanswered</span>
+                </div>
+              </div>
+
+              <div class="palette-grid" id="q-palette-grid">
+                <!-- Buttons 1 to 10 -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Proctor Heads-Up Display (HUD) -->
+          <div class="proctor-hud">
+            <!-- Live Camera Feed Box -->
+            <div class="hud-camera-box" id="hud-camera-container">
+              <video id="hud-video" autoplay playsinline muted></video>
+              <canvas id="hud-canvas"></canvas>
+              <div class="hud-overlay-banner">
+                <span class="pulse-dot"></span> LIVE PROCTOR HUD
+              </div>
+            </div>
+
+            <!-- Trust Score Card -->
+            <div class="glass-card score-card">
+              <div style="font-size: 12px; color: var(--text-muted); font-family: var(--font-mono); margin-bottom: 4px;">
+                EXAM INTEGRITY SCORE
+              </div>
+              <div class="score-display">
+                <span class="score-val" id="score-val">100</span>
+                <span class="score-max">/ 100</span>
+              </div>
+              <div class="score-status-badge" id="score-status-badge">
+                EXEMPLARY / CLEAN
+              </div>
+              <div style="font-size: 11px; color: var(--text-faint); margin-top: 6px;">
+                Timer: <strong id="exam-timer-display" style="color: var(--accent-cyan); font-family: var(--font-mono); font-size: 13px;">15:00</strong>
+              </div>
+            </div>
+
+            <!-- Real-time Sensor Status Chips -->
+            <div class="sensor-status-grid">
+              <div class="sensor-chip">
+                <span class="label">Face Count</span>
+                <span class="status" id="hud-sensor-face">🟢 1 Face</span>
+              </div>
+              <div class="sensor-chip">
+                <span class="label">Gaze Vector</span>
+                <span class="status" id="hud-sensor-gaze">🟢 CENTER</span>
+              </div>
+              <div class="sensor-chip">
+                <span class="label">Prohibited Item</span>
+                <span class="status" id="hud-sensor-object">🟢 None</span>
+              </div>
+              <div class="sensor-chip">
+                <span class="label">Mic dB Level</span>
+                <span class="status" id="hud-sensor-audio">🟢 Normal</span>
+              </div>
+            </div>
+
+            <!-- Real-time Incident Feed -->
+            <div class="glass-card" style="padding: 14px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <span style="font-size: 12px; font-weight: 700; font-family: var(--font-mono); color: var(--text-muted);">
+                  AUDIT LOG (<span id="incident-count-badge">0</span>)
+                </span>
+                <span style="font-size: 10px; color: var(--text-faint);">Live Telemetry</span>
+              </div>
+              <div class="incident-feed" id="incident-feed">
+                <div style="font-size: 11px; color: var(--text-faint); text-align: center; padding: 20px 0;">
+                  No violations logged yet. Session clean.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Screen 1C: Exam Completed View -->
+      <div id="exam-completed-view" class="glass-card" style="display: none; text-align: center; max-width: 680px; margin: 40px auto; padding: 40px 30px;">
+        <div style="font-size: 54px; margin-bottom: 16px;">🎉</div>
+        <h2 style="font-family: var(--font-heading); font-size: 28px; margin-bottom: 10px; color: #fff;">Examination Submitted Successfully</h2>
+        <p style="color: var(--text-muted); font-size: 15px; margin-bottom: 30px;">
+          Your test responses and proctoring telemetry session have been securely encrypted and uploaded to the evaluation server.
+        </p>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 30px;">
+          <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 18px;">
+            <div style="font-size: 12px; color: var(--text-faint); font-family: var(--font-mono);">EXAM SCORE</div>
+            <div style="font-size: 36px; font-weight: 800; font-family: var(--font-heading); color: var(--accent-cyan);" id="final-exam-score">--%</div>
+            <div style="font-size: 12px; color: var(--text-muted);" id="final-exam-ratio">0 of 10 Correct</div>
+          </div>
+
+          <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 18px;">
+            <div style="font-size: 12px; color: var(--text-faint); font-family: var(--font-mono);">INTEGRITY SCORE</div>
+            <div style="font-size: 36px; font-weight: 800; font-family: var(--font-heading);" id="final-trust-score">--%</div>
+            <div style="font-size: 12px;" id="final-trust-badge">CALCULATING...</div>
+          </div>
+        </div>
+
+        <button id="btn-view-audit" class="btn-primary" style="max-width: 340px; margin: 0 auto;">
+          <span>📑</span> View Complete Proctor Audit Report
+        </button>
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 2: AI SENSOR SANDBOX (LIVE DEMO)       -->
+    <!-- ========================================== -->
+    <section id="tab-sandbox" class="tab-content">
+      <div class="sandbox-hero">
+        <h2>🔬 AI Sensor Diagnostics & Live Viva Demonstration</h2>
+        <p style="color: var(--text-muted); font-size: 14px; max-width: 700px; margin: 6px auto;">
+          Dedicated testing environment for professors and evaluators to inspect real-time computer vision inference, 3D landmark mesh, gaze vectors, and acoustic triggers.
+        </p>
+      </div>
+
+      <div class="sandbox-grid">
+        <!-- Left: Large Live Video Canvas -->
+        <div class="glass-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+            <span style="font-family: var(--font-mono); font-size: 13px; font-weight: 700; color: var(--accent-cyan);">
+              HIGH-PRECISION AI STREAM
+            </span>
+            <div style="display: flex; gap: 8px;">
+              <button id="btn-toggle-mesh" class="btn-secondary" style="font-size: 12px; padding: 4px 10px;">
+                Toggle Landmarks
+              </button>
+              <button id="btn-capture-test-snap" class="btn-secondary" style="font-size: 12px; padding: 4px 10px;">
+                📸 Snapshot Frame
+              </button>
+            </div>
+          </div>
+
+          <div style="position: relative; width: 100%; aspect-ratio: 4 / 3; background: #000; border-radius: var(--radius-md); overflow: hidden; border: 2px solid var(--border-subtle);">
+            <video id="sandbox-video" autoplay playsinline muted style="width: 100%; height: 100%; object-fit: cover;"></video>
+            <canvas id="sandbox-canvas" style="position: absolute; top:0; left:0; width: 100%; height: 100%;"></canvas>
+            <div style="position: absolute; top: 12px; left: 14px; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); padding: 4px 10px; border-radius: var(--radius-sm); font-size: 11px; font-family: var(--font-mono); color: var(--accent-emerald);">
+              ● INFERENCE SPEED: <span id="telemetry-fps">0</span> FPS
+            </div>
+          </div>
+
+          <!-- Raw Telemetry Table -->
+          <table class="telemetry-table">
+            <tbody>
+              <tr>
+                <td>Face Landmarks Engine</td>
+                <td>MediaPipe FaceMesh (478 3D Points)</td>
+              </tr>
+              <tr>
+                <td>Head Pose Estimation (Yaw / Pitch / Roll)</td>
+                <td id="telemetry-angles">Yaw: 0° | Pitch: 0° | Roll: 0°</td>
+              </tr>
+              <tr>
+                <td>Gaze Direction Classification</td>
+                <td id="telemetry-gaze">CENTER (Normal)</td>
+              </tr>
+              <tr>
+                <td>Face Count in Frame</td>
+                <td id="telemetry-faces">1 Face</td>
+              </tr>
+              <tr>
+                <td>Object Detection Engine</td>
+                <td>TFJS COCO-SSD MobileNetV2</td>
+              </tr>
+              <tr>
+                <td>Prohibited Objects Detected</td>
+                <td id="telemetry-objects" style="color: var(--accent-emerald);">None</td>
+              </tr>
+              <tr>
+                <td>Microphone Noise Level</td>
+                <td id="telemetry-audio">0% (Silence)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Right: Evaluator Live Test Checklist & Triggers -->
+        <div class="glass-card">
+          <h3 style="font-family: var(--font-heading); font-size: 18px; margin-bottom: 6px;">Evaluation Demonstration Checklist</h3>
+          <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 18px;">Perform these tests live to demonstrate Sentinel AI's capabilities to your professor:</p>
+
+          <div class="demo-tests-list">
+            <div class="demo-test-card" id="test-card-gaze">
+              <div>
+                <strong style="font-size: 13px; display: block;">1. Head Pose / Gaze Deviation</strong>
+                <span style="font-size: 12px; color: var(--text-muted);">Turn head left or right > 18°</span>
+              </div>
+              <span class="test-badge pass" id="badge-test-gaze">Ready</span>
+            </div>
+
+            <div class="demo-test-card" id="test-card-phone">
+              <div>
+                <strong style="font-size: 13px; display: block;">2. Smartphone Detection</strong>
+                <span style="font-size: 12px; color: var(--text-muted);">Hold phone in camera view</span>
+              </div>
+              <span class="test-badge pass" id="badge-test-phone">Ready</span>
+            </div>
+
+            <div class="demo-test-card" id="test-card-multi">
+              <div>
+                <strong style="font-size: 13px; display: block;">3. Multiple Faces Detection</strong>
+                <span style="font-size: 12px; color: var(--text-muted);">Bring second person into frame</span>
+              </div>
+              <span class="test-badge pass" id="badge-test-multi">Ready</span>
+            </div>
+
+            <div class="demo-test-card" id="test-card-audio">
+              <div>
+                <strong style="font-size: 13px; display: block;">4. Acoustic / Speech Trigger</strong>
+                <span style="font-size: 12px; color: var(--text-muted);">Speak aloud or make noise</span>
+              </div>
+              <span class="test-badge pass" id="badge-test-audio">Ready</span>
+            </div>
+
+            <div class="demo-test-card" id="test-card-tab">
+              <div>
+                <strong style="font-size: 13px; display: block;">5. Tab Switch / Window Blur</strong>
+                <span style="font-size: 12px; color: var(--text-muted);">Click another app or switch tab</span>
+              </div>
+              <span class="test-badge pass" id="badge-test-tab">Ready</span>
+            </div>
+          </div>
+
+          <!-- Instant Viva Simulator Controls -->
+          <div style="margin-top: 24px; border-top: 1px solid var(--border-subtle); padding-top: 18px;">
+            <div style="font-size: 12px; color: var(--text-faint); font-family: var(--font-mono); margin-bottom: 10px;">
+              ⚡ QUICK VIVA SIMULATION TRIGGERS
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <button class="btn-secondary" style="font-size: 11px; padding: 8px;" id="sim-btn-phone">
+                Simulate Phone 📱
+              </button>
+              <button class="btn-secondary" style="font-size: 11px; padding: 8px;" id="sim-btn-multi">
+                Simulate 2 Faces 👥
+              </button>
+              <button class="btn-secondary" style="font-size: 11px; padding: 8px;" id="sim-btn-gaze">
+                Simulate Gaze Away ⚠️
+              </button>
+              <button class="btn-secondary" style="font-size: 11px; padding: 8px;" id="sim-btn-tab">
+                Simulate Tab Switch 🖥️
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 3: PROCTOR AUDIT & EVIDENCE REPORT     -->
+    <!-- ========================================== -->
+    <section id="tab-report" class="tab-content">
+      <div class="audit-header-card">
+        <div>
+          <h2 style="font-family: var(--font-heading); font-size: 26px; color: #fff;">Official Examination Proctoring Audit</h2>
+          <p style="color: var(--text-muted); font-size: 14px;">Comprehensive forensic malpractice report & timestamped photographic evidence trail.</p>
+        </div>
+        <button id="btn-print-report" class="btn-primary" style="width: auto; padding: 10px 22px;">
+          🖨️ Print / Save PDF Certificate
+        </button>
+      </div>
+
+      <!-- Candidate & Score Banner -->
+      <div class="glass-card" style="margin-bottom: 24px;">
+        <div style="display: grid; grid-template-columns: 1.2fr 0.8fr 1fr; gap: 20px; align-items: center;">
+          <div>
+            <div style="font-size: 11px; color: var(--text-faint); font-family: var(--font-mono);">CANDIDATE PROFILE</div>
+            <div style="font-size: 20px; font-weight: 700; color: #fff;" id="report-name">Rahul Sharma</div>
+            <div style="font-size: 13px; color: var(--text-muted);" id="report-roll">Roll No: CS-2026-042</div>
+            <div style="font-size: 12px; color: var(--text-faint);" id="report-date">Generated: Realtime</div>
+          </div>
+
+          <div style="text-align: center; border-left: 1px solid var(--border-subtle); border-right: 1px solid var(--border-subtle); padding: 0 16px;">
+            <div style="font-size: 11px; color: var(--text-faint); font-family: var(--font-mono);">FINAL INTEGRITY SCORE</div>
+            <div style="font-size: 38px; font-weight: 800; font-family: var(--font-heading); color: var(--accent-emerald);" id="report-trust-score">100%</div>
+            <div class="score-status-badge" id="report-status-badge">EXEMPLARY / CLEAN</div>
+          </div>
+
+          <div>
+            <div style="font-size: 11px; color: var(--text-faint); font-family: var(--font-mono);">EVALUATION VERDICT</div>
+            <p style="font-size: 13px; color: var(--text-main); line-height: 1.5; margin-top: 4px;" id="report-verdict-text">
+              Candidate showed consistent screen focus. No severe integrity anomalies recorded.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats Grid -->
+      <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-bottom: 24px;">
+        <div class="glass-card" style="padding: 14px; text-align: center;">
+          <div style="font-size: 11px; color: var(--text-faint); font-family: var(--font-mono);">TAB SWITCHES</div>
+          <div style="font-size: 24px; font-weight: 700; color: var(--accent-rose);" id="report-stat-tab">0</div>
+        </div>
+        <div class="glass-card" style="padding: 14px; text-align: center;">
+          <div style="font-size: 11px; color: var(--text-faint); font-family: var(--font-mono);">GAZE DEVIATIONS</div>
+          <div style="font-size: 24px; font-weight: 700; color: var(--accent-amber);" id="report-stat-gaze">0</div>
+        </div>
+        <div class="glass-card" style="padding: 14px; text-align: center;">
+          <div style="font-size: 11px; color: var(--text-faint); font-family: var(--font-mono);">ABSENT / NO FACE</div>
+          <div style="font-size: 24px; font-weight: 700; color: var(--accent-rose);" id="report-stat-noface">0</div>
+        </div>
+        <div class="glass-card" style="padding: 14px; text-align: center;">
+          <div style="font-size: 11px; color: var(--text-faint); font-family: var(--font-mono);">MULTIPLE FACES</div>
+          <div style="font-size: 24px; font-weight: 700; color: var(--accent-rose);" id="report-stat-multi">0</div>
+        </div>
+        <div class="glass-card" style="padding: 14px; text-align: center;">
+          <div style="font-size: 11px; color: var(--text-faint); font-family: var(--font-mono);">PHONE / OBJECTS</div>
+          <div style="font-size: 24px; font-weight: 700; color: var(--accent-rose);" id="report-stat-phone">0</div>
+        </div>
+      </div>
+
+      <!-- Visual Evidence Gallery -->
+      <div class="glass-card">
+        <h3 style="font-family: var(--font-heading); font-size: 18px; margin-bottom: 4px;">Photographic Evidence Trail</h3>
+        <p style="color: var(--text-muted); font-size: 13px;">Automated snapshots captured by Sentinel AI whenever an integrity violation occurred:</p>
+
+        <div class="evidence-grid" id="evidence-gallery">
+          <div style="grid-column: 1 / -1; text-align: center; padding: 40px 0; color: var(--text-faint); font-size: 14px;">
+            📷 No violation snapshots captured during this session.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 4: PPT & VIVA PRESENTATION GUIDE       -->
+    <!-- ========================================== -->
+    <section id="tab-slides" class="tab-content">
+      <div style="text-align: center; margin-bottom: 24px;">
+        <h2 style="font-family: var(--font-heading); font-size: 26px; color: #fff;">Mini-Project Presentation & Viva Guide</h2>
+        <p style="color: var(--text-muted); font-size: 14px;">
+          Complete PowerPoint slide breakdown, system architecture, and frequently asked Viva questions with answers.
+        </p>
+      </div>
+
+      <div class="slide-deck">
+        <!-- Slide 1 -->
+        <div class="slide-card">
+          <span class="slide-badge">SLIDE 1</span>
+          <h3 class="slide-title">Project Title & Objective</h3>
+          <ul class="slide-bullets">
+            <li><strong>Title:</strong> Autonomous AI-Powered Online Examination Proctoring System (Sentinel AI).</li>
+            <li><strong>Objective:</strong> To develop a client-side, zero-latency automated proctoring platform that guarantees exam integrity without expensive human invigilators.</li>
+            <li><strong>Scope:</strong> Real-time Computer Vision facial pose tracking, prohibited device detection, acoustic speech monitoring, and browser lockdown.</li>
+          </ul>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="slide-card">
+          <span class="slide-badge">SLIDE 2</span>
+          <h3 class="slide-title">Problem Statement & Motivation</h3>
+          <ul class="slide-bullets">
+            <li><strong>Post-Pandemic Shift:</strong> Shift to remote online examinations created widespread academic integrity issues.</li>
+            <li><strong>Human Proctoring Limitations:</strong> Human proctors suffer from cognitive fatigue, high latency, cannot monitor more than 5-10 students simultaneously, and cost significant money.</li>
+            <li><strong>Existing AI Issues:</strong> Heavy server-side video streaming causes high bandwidth costs and privacy concerns.</li>
+            <li><strong>Our Solution:</strong> Edge AI proctoring running directly in the browser via WebAssembly & WebGL.</li>
+          </ul>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="slide-card">
+          <span class="slide-badge">SLIDE 3</span>
+          <h3 class="slide-title">System Architecture & Workflow</h3>
+          <ul class="slide-bullets">
+            <li><strong>Input Layer:</strong> User Webcam Stream (640x480 @ 30fps) + Microphone Stream (Web Audio API).</li>
+            <li><strong>Computer Vision Pipeline:</strong> MediaPipe FaceMesh (478 3D facial landmarks) for Head Pose (Yaw, Pitch, Roll) and Gaze Tracking.</li>
+            <li><strong>Object Recognition Pipeline:</strong> MobileNetV2 COCO-SSD running asynchronously every 500ms for smartphone and book detection.</li>
+            <li><strong>Acoustic Analysis:</strong> Real-time Fast Fourier Transform (FFT) analysis to filter ambient noise and detect voice frequencies (100Hz–3000Hz).</li>
+            <li><strong>Browser Security Layer:</strong> Page Visibility API, Fullscreen Lock, DevTools shortcut blockers, and window blur listeners.</li>
+            <li><strong>Evaluation & Scoring Engine:</strong> Dynamic Trust Score decrement algorithm with automated photographic snapshot evidence logging.</li>
+          </ul>
+        </div>
+
+        <!-- Slide 4 -->
+        <div class="slide-card">
+          <span class="slide-badge">SLIDE 4</span>
+          <h3 class="slide-title">Technology Stack</h3>
+          <ul class="slide-bullets">
+            <li><strong>Frontend Core:</strong> HTML5, Vanilla JavaScript (ES2024 Modules), Modern Vanilla CSS Design System.</li>
+            <li><strong>AI / Machine Learning Frameworks:</strong> Google MediaPipe Tasks Vision, TensorFlow.js (TFJS).</li>
+            <li><strong>Web APIs:</strong> WebRTC MediaDevices, Web Audio API, Page Visibility API, Fullscreen API, HTML5 Canvas.</li>
+            <li><strong>Bundler / Runtime:</strong> Vite Dev Server, WebAssembly (Wasm) acceleration.</li>
+          </ul>
+        </div>
+
+        <!-- Slide 5 -->
+        <div class="slide-card">
+          <span class="slide-badge">SLIDE 5</span>
+          <h3 class="slide-title">Key Features & Differentiators</h3>
+          <ul class="slide-bullets">
+            <li><strong>100% Client-Side Privacy:</strong> Video is processed on the candidate's device; no raw video streams are transmitted to servers.</li>
+            <li><strong>Sub-30ms Latency:</strong> Real-time detection with immediate warning chimes and toasts.</li>
+            <li><strong>Anti-Cheating Forensic Snapshots:</strong> Captures high-resolution watermarked evidence whenever a violation occurs.</li>
+            <li><strong>Integrated Viva Sandbox:</strong> Built-in live testing tab allows evaluators to verify each AI sensor on demand.</li>
+          </ul>
+        </div>
+
+        <!-- Slide 6 -->
+        <div class="slide-card">
+          <span class="slide-badge">SLIDE 6</span>
+          <h3 class="slide-title">Viva Questions & Technical Answers</h3>
+          <ul class="slide-bullets">
+            <li><strong>Q: How do you calculate Head Pose (Looking Left/Right)?</strong><br>
+              <em>A: We compute the horizontal offset ratio between the 3D nose tip landmark (Point 1) and the midpoint between the left outer eye (Point 33) and right outer eye (Point 263). If the yaw angle exceeds ±18°, a gaze deviation is flagged.</em>
+            </li>
+            <li><strong>Q: How does phone detection work in the browser without freezing the UI?</strong><br>
+              <em>A: We run TensorFlow.js MobileNetV2 COCO-SSD asynchronously inside requestAnimationFrame / decoupled setInterval timers using WebGL GPU shaders.</em>
+            </li>
+            <li><strong>Q: What happens if a student switches tabs or presses Alt+Tab?</strong><br>
+              <em>A: The Page Visibility API detects the `visibilitychange` state change and `window.blur` event, immediately triggering a -15 penalty and logging a timestamped violation.</em>
+            </li>
+            <li><strong>Q: How do you prevent false positives from normal blinks or background noise?</strong><br>
+              <em>A: We implement temporal smoothing and a grace period (e.g., candidate must look away for > 2.5 seconds or noise must sustain across 25 consecutive audio frames) before logging a penalty.</em>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Violation Toast Notifications Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Entry Script -->
+</body>
+</html>
